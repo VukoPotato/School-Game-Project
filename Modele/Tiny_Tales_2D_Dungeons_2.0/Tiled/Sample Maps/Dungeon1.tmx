@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="2017.05.26" orientation="orthogonal" renderorder="right-down" width="16" height="16" tilewidth="16" tileheight="16" nextobjectid="1">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="16" height="16" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="1">
  <tileset firstgid="1" source="../Set_A_Fortress1.tsx"/>
- <layer name="1" width="16" height="16">
+ <layer id="1" name="1" width="16" height="16">
   <data encoding="csv">
 245,245,245,245,245,245,245,245,245,245,245,245,245,245,245,245,
 245,245,245,245,245,245,245,245,245,245,245,245,245,245,245,245,
@@ -21,7 +21,7 @@
 245,245,245,245,245,245,245,245,245,245,245,245,245,245,245,245
 </data>
  </layer>
- <layer name="2" width="16" height="16">
+ <layer id="2" name="2" width="16" height="16">
   <data encoding="csv">
 7,34,34,34,34,8,18,18,18,18,7,34,34,34,34,8,
 19,0,0,0,0,17,18,18,18,18,19,0,0,0,0,17,
@@ -41,7 +41,7 @@
 23,2,2,2,2,24,18,18,23,2,2,2,2,2,2,24
 </data>
  </layer>
- <layer name="3" width="16" height="16">
+ <layer id="3" name="3" width="16" height="16">
   <data encoding="csv">
 0,0,0,0,0,0,209,210,210,211,0,0,0,0,0,0,
 0,0,0,0,0,0,209,210,210,211,0,0,0,0,0,0,
@@ -61,7 +61,7 @@
 194,194,194,194,194,194,196,197,194,194,194,194,194,194,194,194
 </data>
  </layer>
- <layer name="4" width="16" height="16">
+ <layer id="4" name="4" width="16" height="16">
   <data encoding="csv">
 0,104,0,0,0,0,0,0,0,0,0,0,0,0,104,0,
 0,120,0,0,0,0,0,0,0,0,0,0,0,0,120,0,
