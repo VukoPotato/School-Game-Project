@@ -1,17 +1,57 @@
 const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
 
+console.log(collisions);
+
 canvas.width = 1024
 canvas.height = 576
 
-c.fillStyle = 'white'
-c.fillRect(0, 0, canvas.width, canvas.height)
+const collisions = []
+for (let i = 0; i < collisionsMap.length; i += 16) {
+    collisionsMap.push(collisions.slice(i, 16 + i))
+}
+
+class Boundary {
+    static width = 64
+    static height = 64
+    constructor({position}) {
+        this.position = position
+        this.width = 64
+        this.height = 64
+    }
+
+    draw() {
+        c.fillStyle = 'red'
+        c.fillRect(this.position.x, this.position.y, this.width, this.height)
+    }
+}
+
+const boundaries = []
+const offset = {
+    x: -85,
+    y: -28
+}
+
+collisionsMap.forEach((row, i) => {
+    row.forEach((symbol, j) => {
+        boundaries.push(
+            new Boundary({
+                position: {
+                    x: j * Boundary.width + offset.x,
+                    y: i * Boundary.height + offset.y
+                }
+            })
+        )
+    })
+})
+
+console.log(boundaries);
 
 const image = new Image()
-image.src = './test.png'
+image.src = 'mapa.png'
 
 const playerImage = new Image()
-playerImage.src = './down-test.png'
+playerImage.src = 'down-test.png'
 
 class Sprite {
     constructor({ position, velocity, image })  {
@@ -26,8 +66,8 @@ class Sprite {
 
 const background = new Sprite({
     position: {
-        x: -85,
-        y: -28,
+        x: offset.x,
+        y: offset.y,
     },
     image: image
 })
@@ -53,6 +93,9 @@ const keys = {
 function animate() {
     window.requestAnimationFrame(animate)
     background.draw()
+    boundaries.forEach(boundary => {
+        boundary.draw()
+    })
     c.drawImage(
         playerImage,
         0,
