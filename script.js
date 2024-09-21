@@ -14,8 +14,6 @@ for (let i = 0; i < battleZonesData.length; i += 16) {
     battleZonesMap.push(battleZonesData.slice(i, 16 + i))
 }
 
-console.log(battleZonesMap)
-
 const boundaries = []
 const offset = {
     x: -85,
@@ -125,8 +123,12 @@ function rectangularCollision({rectangle1, rectangle2}) {
 
 }
 
+const battle = {
+    initiated: false
+}
+
 function animate() {
-    window.requestAnimationFrame(animate)
+    const animationId = window.requestAnimationFrame(animate)
     background.draw()
     boundaries.forEach(boundary => {
         boundary.draw()
@@ -136,6 +138,12 @@ function animate() {
         battleZone.draw()
     })
     player.draw()
+
+    let moving = true
+    player.moving = false
+    
+    console.log(animationId);
+    if (battle.initiated) return
 
     if (keys.w.pressed || keys.a.pressed || keys.s.pressed || keys.d.pressed) {
         for (let i = 0; i < battleZones.length; i++) {
@@ -152,14 +160,31 @@ function animate() {
                 }) &&
                 overlappingArea > (player.width * player.height) / 2
                 && Math.random () < 0.01
-             ) {
-                 break
-             }
+            )   {
+                console.log('activate battle')
+
+                window.cancelAnimationFrame(animationId)
+
+                battle.initiated = true
+                gsap.to('#cutscene', {
+                    opacity: 1,
+                    repeat: 3,
+                    yoyo: true,
+                    duration: 0.4,
+                    onComplete() {
+                        gsap.to('#cutscene', {
+                        opacity: 1,
+                        duration: 0.4
+                    })
+
+                    animateBattle()
+                }
+            })
+            break
+            }
         }
     }
 
-    let moving = true
-    player.moving = false
     if (keys.w.pressed && lastKey == 'w') { 
         player.moving = true
         player.image = player.sprites.up
@@ -259,6 +284,11 @@ function animate() {
     }
 }
 animate()
+
+function animateBattle () {
+    window.requestAnimationFrame(animateBattle)
+    console.log('animating battle');
+}
 
 let lastKey = ''
 window.addEventListener('keydown', (e) => {
