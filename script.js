@@ -5,24 +5,24 @@ canvas.width = 1024
 canvas.height = 576
 
 const collisionsMap = []
-for (let i = 0; i < collisions.length; i += 16) {
-    collisionsMap.push(collisions.slice(i, 16 + i))
+for (let i = 0; i < collisions.length; i += 32) {
+    collisionsMap.push(collisions.slice(i, 32 + i))
 }
 
 const battleZonesMap = []
-for (let i = 0; i < battleZonesData.length; i += 16) {
-    battleZonesMap.push(battleZonesData.slice(i, 16 + i))
+for (let i = 0; i < battleZonesData.length; i += 32) {
+    battleZonesMap.push(battleZonesData.slice(i, 32 + i))
 }
 
 const boundaries = []
 const offset = {
-    x: -85,
-    y: -28
+    x: 64,
+    y: -1304
 }
 
 collisionsMap.forEach((row, i) => {
     row.forEach((symbol, j) => {
-        if (symbol === 210) { 
+        if (symbol === 578) { 
             boundaries.push(
                 new Boundary({
                     position: {
@@ -39,7 +39,7 @@ const battleZones = []
 
 battleZonesMap.forEach((row, i) => {
     row.forEach((symbol, j) => {
-        if (symbol === 66) { 
+        if (symbol === 567) { 
             battleZones.push(
                 new Boundary({
                     position: {
@@ -55,6 +55,9 @@ battleZonesMap.forEach((row, i) => {
 const image = new Image()
 image.src = './img/mapa.png'
 
+const foregroundImage = new Image()
+foregroundImage.src = './img/foreground.png'
+
 const playerDownImage = new Image()
 playerDownImage.src = './img/playerDown.png'
 
@@ -69,8 +72,8 @@ playerRightImage.src = './img/playerRight.png'
 
 const player = new Sprite({
     position: {
-        x: canvas.width / 2 - 183  / 3 / 2,
-        y: canvas.height / 2 - 63 / 2
+        x: canvas.width / 2 - 192 / 3 / 2,
+        y: canvas.height / 2 - 80 / 2
     },
     image: playerDownImage,
     frames: {
@@ -88,9 +91,17 @@ console.log(player)
 const background = new Sprite({
     position: {
         x: offset.x,
-        y: offset.y,
+        y: offset.y
     },
     image: image
+})
+
+const foreground = new Sprite({
+    position: {
+        x: offset.x,
+        y: offset.y
+    },
+    image: foregroundImage
 })
 
 const keys = {
@@ -111,7 +122,7 @@ const keys = {
     }
 }
 
-const movables = [background, ...boundaries, ...battleZones]
+const movables = [background, ...boundaries, foreground, ...battleZones]
 
 function rectangularCollision({rectangle1, rectangle2}) {
     return (
@@ -138,6 +149,7 @@ function animate() {
         battleZone.draw()
     })
     player.draw()
+    foreground.draw()
 
     let moving = true
     player.moving = false
