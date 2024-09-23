@@ -75,7 +75,7 @@ const player = new Sprite({
         x: canvas.width / 2 - 192 / 3 / 2,
         y: canvas.height / 2 - 80 / 2
     },
-    image: playerDownImage,
+    image: playerUpImage,
     frames: {
         max: 3,
         hold: 10
@@ -325,8 +325,7 @@ const enemy = new Sprite({
     frames: {
         max: 3,
         hold: 30
-    },
-    animate: true
+    }
 }) // Drawing enemy sprite on battleMap
 
 const playerBattleImage = new Image()
@@ -340,18 +339,19 @@ const playerBattle = new Sprite({
     frames: {
         max: 3,
         hold: 30
-    },
-    animate: true
+    }
 }) // Drawing player sprite on battleMap
 
 function animateBattle () {
     window.requestAnimationFrame(animateBattle)
     battleBackgroundFirst.draw()
     enemy.draw()
+    enemy.animate = true;
+    playerBattle.animate = true;
     playerBattle.draw()
 }
 
-// animate()
+//animate()
 animateBattle() //temporary so that map starts on battle sequence
 
 let lastKey = ''

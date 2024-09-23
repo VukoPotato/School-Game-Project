@@ -25,7 +25,7 @@ class Sprite {
             this.image.height 
         )
 
-        if (!this.moving) return
+        if (!this.animate) return
          
         if (this.frames.max > 1) {
             this.frames.elapsed++
