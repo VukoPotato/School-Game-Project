@@ -39,7 +39,7 @@ body {
     right: 0;
     border-top: 4px black solid;
     display: flex;
-    width: 100%;
+    width: 1024px;
 }
 
 #attacks {
@@ -48,12 +48,66 @@ body {
     grid-template-columns: repeat(2, 1fr);
 }
 
-#attackType{
+#attackType {
     display: flex;
     align-items: center;
     justify-content: center;
     border-left: 1px black solid;
     width: 30%;
+}
+
+.healthOverlapping {
+    position: relative;
+}
+
+.enemyHealth {
+    background-color: white;
+    width: 250px;
+    position: absolute;
+    border: 4px black solid;
+    top: 25px;
+    left: 25px;
+    padding: 12px;
+}
+
+#enemyHealthEmpty {
+    height: 5px;
+    background-color: gray;
+    margin-top: 5px;
+}
+
+#enemyHealthFull {
+    height: 5px;
+    background-color: red;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.playerHealth {
+    background-color: white;
+    width: 250px;
+    position: absolute;
+    border: 4px black solid;
+    bottom: 169px;
+    right: 25px;
+    padding: 12px;
+}
+
+#playerHealthEmpty {
+    height: 5px;
+    background-color: gray;
+    margin-top: 5px;
+}
+
+#playerHealthFull {
+    height: 5px;
+    background-color: red;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
 }
 
 h1 {
