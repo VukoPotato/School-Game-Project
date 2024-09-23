@@ -77,7 +77,8 @@ const player = new Sprite({
     },
     image: playerUpImage,
     frames: {
-        max: 3
+        max: 3,
+        hold: 10
     },
     sprites: {
         up: playerUpImage,
@@ -152,7 +153,7 @@ function animate() {
     foreground.draw()
 
     let moving = true
-    player.moving = false
+    player.animate = false
     
     console.log(animationId);
     if (battle.initiated) return
@@ -171,10 +172,11 @@ function animate() {
                  rectangle2: battleZone
                 }) &&
                 overlappingArea > (player.width * player.height) / 2
-                && Math.random () < 0
+                && Math.random () < 0.1 // Chance of battle occuring
             )   {
                 console.log('activate battle')
 
+                // deactivate current animation
                 window.cancelAnimationFrame(animationId)
 
                 battle.initiated = true
@@ -186,10 +188,16 @@ function animate() {
                     onComplete() {
                         gsap.to('#cutscene', {
                         opacity: 1,
-                        duration: 0.4
+                        duration: 0.4,
+                        onComplete() {
+                            // activate a new animation loop
+                            animateBattle()
+                            gsap.to('#cutscene', {
+                                opacity: 0,
+                                duration: 0.4
+                            })
+                        }
                     })
-
-                    animateBattle()
                 }
             })
             break
@@ -198,7 +206,7 @@ function animate() {
     }
 
     if (keys.w.pressed && lastKey == 'w') { 
-        player.moving = true
+        player.animate = true
         player.image = player.sprites.up
 
         for (let i = 0; i < boundaries.length; i++) {
@@ -222,7 +230,7 @@ function animate() {
             movable.position.y += 2
         })
     } else if (keys.a.pressed && lastKey == 'a') { 
-        player.moving = true
+        player.animate = true
         player.image = player.sprites.left
 
         for (let i = 0; i < boundaries.length; i++) {
@@ -246,7 +254,7 @@ function animate() {
             movable.position.x += 2
         })
     } else if (keys.s.pressed && lastKey == 's') { 
-        player.moving = true
+        player.animate = true
         player.image = player.sprites.down
 
         for (let i = 0; i < boundaries.length; i++) {
@@ -270,7 +278,7 @@ function animate() {
             movable.position.y -= 2
         })
     } else if (keys.d.pressed && lastKey == 'd') { 
-        player.moving = true
+        player.animate = true
         player.image = player.sprites.right
 
         for (let i = 0; i < boundaries.length; i++) {
@@ -295,12 +303,56 @@ function animate() {
         })
     }
 }
-animate()
+
+const battleBackgroundImageFirst = new Image()
+battleBackgroundImageFirst.src = './img/battleSceneFirst.png'
+const battleBackgroundFirst = new Sprite({
+    position: {
+        x: 0,
+        y: 0
+    },
+    image: battleBackgroundImageFirst
+})
+
+const enemyImage = new Image()
+enemyImage.src = './img/playerDown.png'
+const enemy = new Sprite({
+    position: {
+        x: 825,
+        y: 100
+    }, //enemy positioning by pixels
+    image: enemyImage,
+    frames: {
+        max: 3,
+        hold: 30
+    },
+    animate: true
+}) // Drawing enemy sprite on battleMap
+
+const playerBattleImage = new Image()
+playerBattleImage.src = './img/playerBattle.png'
+const playerBattle = new Sprite({
+    position: {
+        x: 310,
+        y: 330
+    }, //player positioning by pixels
+    image: playerBattleImage,
+    frames: {
+        max: 3,
+        hold: 30
+    },
+    animate: true
+}) // Drawing player sprite on battleMap
 
 function animateBattle () {
     window.requestAnimationFrame(animateBattle)
-    console.log('animating battle');
+    battleBackgroundFirst.draw()
+    enemy.draw()
+    playerBattle.draw()
 }
+
+// animate()
+animateBattle() //temporary so that map starts on battle sequence
 
 let lastKey = ''
 window.addEventListener('keydown', (e) => {
