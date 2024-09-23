@@ -87,7 +87,6 @@ const player = new Sprite({
         right: playerRightImage
     }
 })
-console.log(player)
 
 const background = new Sprite({
     position: {
@@ -155,7 +154,6 @@ function animate() {
     let moving = true
     player.animate = false
     
-    console.log(animationId);
     if (battle.initiated) return
 
     if (keys.w.pressed || keys.a.pressed || keys.s.pressed || keys.d.pressed) {
@@ -174,8 +172,6 @@ function animate() {
                 overlappingArea > (player.width * player.height) / 2
                 && Math.random () < 0.1 // Chance of battle occuring
             )   {
-                console.log('activate battle')
-
                 // deactivate current animation
                 window.cancelAnimationFrame(animationId)
 
@@ -220,8 +216,8 @@ function animate() {
                  }}
                 })
              ) {
-                 moving = false
-                 break
+                moving = false
+                break
              }
         }
 
@@ -244,8 +240,8 @@ function animate() {
                  }}
                 })
              ) {
-                 moving = false
-                 break
+                moving = false
+                break
              }
         }
 
@@ -268,8 +264,8 @@ function animate() {
                  }}
                 })
              ) {
-                 moving = false
-                 break
+                moving = false
+                break
              }
         }
 
@@ -292,8 +288,8 @@ function animate() {
                  }}
                 })
              ) {
-                 moving = false
-                 break
+                moving = false
+                break
              }
         }
 
@@ -324,35 +320,35 @@ const enemy = new Sprite({
     image: enemyImage,
     frames: {
         max: 3,
-        hold: 30
-    }
+        hold: 100
+    },
+    animate:true
 }) // Drawing enemy sprite on battleMap
 
-const playerBattleImage = new Image()
-playerBattleImage.src = './img/playerBattle.png'
+const playerImage = new Image()
+playerImage.src = './img/playerBattle.png'
 const playerBattle = new Sprite({
     position: {
         x: 310,
         y: 330
     }, //player positioning by pixels
-    image: playerBattleImage,
+    image: playerImage,
     frames: {
         max: 3,
-        hold: 30
-    }
+        hold: 100
+    },
+    animate:true
 }) // Drawing player sprite on battleMap
 
 function animateBattle () {
     window.requestAnimationFrame(animateBattle)
     battleBackgroundFirst.draw()
     enemy.draw()
-    enemy.animate = true;
-    playerBattle.animate = true;
     playerBattle.draw()
 }
 
-//animate()
-animateBattle() //temporary so that map starts on battle sequence
+animate()
+//animateBattle() //temporary so that map starts on battle sequence
 
 let lastKey = ''
 window.addEventListener('keydown', (e) => {

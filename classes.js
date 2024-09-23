@@ -8,7 +8,7 @@ class Sprite {
             this.width = this.image.width / this.frames.max
             this.height = this.image.height
         }
-        this.moving = animate
+        this.animate = animate
         this.sprites = sprites
     }
 
