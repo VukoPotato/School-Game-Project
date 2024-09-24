@@ -170,9 +170,9 @@ function animate() {
                  rectangle2: battleZone
                 }) &&
                 overlappingArea > (player.width * player.height) / 2
-                && Math.random () < 0.1 // Chance of battle occuring
+                && Math.random () < 0.1 // Szansa na bitke
             )   {
-                // deactivate current animation
+                //dezaktywacja obecnej animacji
                 window.cancelAnimationFrame(animationId)
 
                 battle.initiated = true
@@ -186,7 +186,7 @@ function animate() {
                         opacity: 1,
                         duration: 0.4,
                         onComplete() {
-                            // activate a new animation loop
+                            //aktywacja nowego petli animacji
                             animateBattle()
                             gsap.to('#cutscene', {
                                 opacity: 0,
@@ -311,34 +311,34 @@ const battleBackgroundFirst = new Sprite({
 })
 
 const enemyImage = new Image()
-enemyImage.src = './img/playerDown.png'
+enemyImage.src = './img/enemy.png'
 const enemy = new Sprite({
     position: {
-        x: 825,
-        y: 100
-    }, //enemy positioning by pixels
+        x: 800,
+        y: 30
+    }, //pozycja przeciwnika w pixelach
     image: enemyImage,
     frames: {
         max: 3,
         hold: 100
     },
-    animate:true
-}) // Drawing enemy sprite on battleMap
+    animate: true
+}) //generowanie sprita przeciwnika na mapce
 
 const playerImage = new Image()
 playerImage.src = './img/playerBattle.png'
 const playerBattle = new Sprite({
     position: {
-        x: 310,
-        y: 330
-    }, //player positioning by pixels
+        x: 240,
+        y: 180
+    }, //pozycja gracza w pixelach 
     image: playerImage,
     frames: {
         max: 3,
         hold: 100
     },
     animate:true
-}) // Drawing player sprite on battleMap
+}) //generowanie sprita gracza na mapce
 
 function animateBattle () {
     window.requestAnimationFrame(animateBattle)
@@ -348,7 +348,7 @@ function animateBattle () {
 }
 
 animate()
-//animateBattle() //temporary so that map starts on battle sequence
+//animateBattle()//temporary so that map starts on battle sequence
 
 let lastKey = ''
 window.addEventListener('keydown', (e) => {
