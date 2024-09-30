@@ -72,12 +72,12 @@ playerRightImage.src = './img/playerRight.png'
 
 const player = new Sprite({
     position: {
-        x: canvas.width / 2 - 192 / 3 / 2,
+        x: canvas.width / 2 - 256 / 4 / 2,
         y: canvas.height / 2 - 80 / 2
     },
     image: playerUpImage,
     frames: {
-        max: 3,
+        max: 4,
         hold: 10
     },
     sprites: {
@@ -315,14 +315,15 @@ enemyImage.src = './img/enemy.png'
 const enemy = new Sprite({
     position: {
         x: 800,
-        y: 30
+        y: 55
     }, //pozycja przeciwnika w pixelach
     image: enemyImage,
     frames: {
         max: 3,
         hold: 100
     },
-    animate: true
+    animate: true,
+    isEnemy: true
 }) //generowanie sprita przeciwnika na mapce
 
 const playerImage = new Image()
@@ -330,7 +331,7 @@ playerImage.src = './img/playerBattle.png'
 const playerBattle = new Sprite({
     position: {
         x: 240,
-        y: 180
+        y: 210
     }, //pozycja gracza w pixelach 
     image: playerImage,
     frames: {
@@ -340,15 +341,29 @@ const playerBattle = new Sprite({
     animate:true
 }) //generowanie sprita gracza na mapce
 
+const renderedSprites = [enemy, playerBattle]
 function animateBattle () {
     window.requestAnimationFrame(animateBattle)
     battleBackgroundFirst.draw()
-    enemy.draw()
-    playerBattle.draw()
+
+    renderedSprites.forEach((sprite) => {
+        sprite.draw()
+    })
 }
 
 animate()
-//animateBattle()//temporary so that map starts on battle sequence
+//animateBattle()
+
+document.querySelectorAll('button').forEach(button => {
+    button.addEventListener('click', (e) => {
+        const selectedAttack = attacks[e.currentTarget.innerHTML]
+        playerBattle.attack({ 
+            attack: selectedAttack,
+            recipient: enemy,
+            renderedSprites
+        })
+    })
+})
 
 let lastKey = ''
 window.addEventListener('keydown', (e) => {
