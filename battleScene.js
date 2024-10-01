@@ -8,53 +8,116 @@ const battleBackgroundFirst = new Sprite({
     image: battleBackgroundImageFirst
 })
 
-const enemy = new Monster(monsters.enemy) //generowanie sprita przeciwnika na mapce
+let enemy 
+let playerBattle
+let renderedSprites 
+let battleAnimationId
+let queue
 
-const playerBattle = new Monster(monsters.player) //generowanie sprita gracza na mapce
+function initBattle() {
+    document.querySelector('#userInterface').style.display = 'block'
+    document.querySelector('#dialogueBox').style.display = 'none'
+    document.querySelector('#enemyHealthFull').style.width = '100%'
+    document.querySelector('#playerHealthFull').style.width = '100%'
+    document.querySelector('#attacks').replaceChildren()
 
-const renderedSprites = [enemy, playerBattle]
+    enemy = new Monster(monsters.enemy) //generowanie sprita przeciwnika na mapce
+    playerBattle = new Monster(monsters.player) //generowanie sprita gracza na mapce
+    renderedSprites = [enemy, playerBattle]
+    queue = []
 
-playerBattle.attacks.forEach(attack => {
-    const button = document.createElement('button')
-    button.innerHTML = attack.name
-    document.querySelector('#attacks').append(button)
-})
-
-function animateBattle () {
-    window.requestAnimationFrame(animateBattle)
-    battleBackgroundFirst.draw()
-
-    renderedSprites.forEach((sprite) => {
-        sprite.draw()
+    playerBattle.attacks.forEach(attack => {
+        const button = document.createElement('button')
+        button.innerHTML = attack.name
+        document.querySelector('#attacks').append(button)
     })
-}
 
-//animate()
-animateBattle()
+        //event listener dla przycisków (ataków)
+    document.querySelectorAll('button').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const selectedAttack = attacks[e.currentTarget.innerHTML]
+            playerBattle.attack({ 
+                attack: selectedAttack,
+                recipient: enemy,
+                renderedSprites
+            })
 
-const queue = []
+            if (enemy.health <= 0) {
+                queue.push(() => {
+                    enemy.faint()
+                })
+                queue.push(() => {
+                    gsap.to('#cutscene', {
+                        opacity: 1,
+                        onComplete: () => {
+                            cancelAnimationFrame(battleAnimationId)
+                            animate()
+                            document.querySelector('#userInterface').style.display = 'none'
 
-//event listener dla przycisków (ataków)
-document.querySelectorAll('button').forEach(button => {
-    button.addEventListener('click', (e) => {
-        const selectedAttack = attacks[e.currentTarget.innerHTML]
-        playerBattle.attack({ 
-            attack: selectedAttack,
-            recipient: enemy,
-            renderedSprites
-        })
+                            gsap.to('#cutscene', {
+                                opacity: 0
+                            })
 
-        const randomAttack = enemy.attacks[Math.floor(Math.random() * enemy.attacks.length)]
+                            battle.initiated = false
+                        }
+                    })
+                })
+            }
 
-        queue.push(() => {
-            enemy.attack({ 
-            attack: randomAttack,
-            recipient: playerBattle,
-            renderedSprites
+            const randomAttack = enemy.attacks[Math.floor(Math.random() * enemy.attacks.length)]
+
+            queue.push(() => {
+                enemy.attack({ 
+                    attack: randomAttack,
+                    recipient: playerBattle,
+                    renderedSprites
+                })
+
+                if (playerBattle.health <= 0) {
+                    queue.push(() => {
+                        playerBattle.faint()
+                    })
+
+                    queue.push(() => {
+                        gsap.to('#cutscene', {
+                            opacity: 1,
+                            onComplete: () => {
+                                cancelAnimationFrame(battleAnimationId)
+                                animate()
+                                document.querySelector('#userInterface').style.display = 'none'
+
+                                gsap.to('#cutscene', {
+                                    opacity: 0
+                                })
+
+                                battle.initiated = false
+                            }
+                        })
+                    })
+                }
             })
         })
+
+        button.addEventListener('mouseenter', (e) => {
+            const selectedAttack = attacks[e.currentTarget.innerHTML]
+            document.querySelector('#attackType').innerHTML = selectedAttack.type
+            document.querySelector('#attackType').style.color = selectedAttack.color
+        })
     })
-})
+    }
+
+    function animateBattle () {
+        battleAnimationId = window.requestAnimationFrame(animateBattle)
+        battleBackgroundFirst.draw()
+
+        renderedSprites.forEach((sprite) => {
+            sprite.draw()
+        })
+}
+
+animate()
+//initBattle()
+//animateBattle()
 
 document.querySelector('#dialogueBox').addEventListener('click', (e) => {
     if (queue.length > 0) {

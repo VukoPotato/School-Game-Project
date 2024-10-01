@@ -1,20 +1,21 @@
 class Sprite {
     constructor({ 
-        position, 
+        position,
+        velocity,
         image, 
         frames = { max: 1, hold: 10 }, 
         sprites, 
         animate = false,
-        rotation = 0,
+        rotation = 0
     })  {
         this.position = position
-        this.image = image
+        this.image = new Image()
         this.frames = {...frames, val: 0, elapsed: 0 }
-
         this.image.onload = () => {
             this.width = this.image.width / this.frames.max
             this.height = this.image.height
         }
+        this.image.src = image.src
         this.animate = animate
         this.sprites = sprites
         this.opacity = 1
@@ -87,6 +88,15 @@ class Monster extends Sprite {
         this.name = name
         this.attacks = attacks
     }
+
+    faint() {
+        document.querySelector('#dialogueBox').innerHTML = this.name + ' fainted!'
+        gsap.to(this, { 
+            opacity: 0,
+            duration: 0.8
+        })
+    }
+
     attack({ attack, recipient, renderedSprites }) {
         document.querySelector('#dialogueBox').style.display = 'block'
         document.querySelector('#dialogueBox').innerHTML = this.name + ' used ' + attack.name
@@ -97,7 +107,7 @@ class Monster extends Sprite {
         let rotation = 0.5
         if(this.isEnemy) rotation = -2.5
 
-        this.health -= attack.damage
+        recipient.health -= attack.damage
         
         switch (attack.name) {
             case 'Fireball':
@@ -123,7 +133,7 @@ class Monster extends Sprite {
                     y: recipient.position.y,
                     onComplete: () => {
                         gsap.to(healthBar, {
-                            width: this.health + '%'
+                            width: recipient.health + '%'
                         })
                         gsap.to(recipient.position, {
                             x: recipient.position.x + 10,
@@ -157,7 +167,7 @@ class Monster extends Sprite {
                     duration: 0.1,
                     onComplete: () => {
                         gsap.to(healthBar, {
-                            width: this.health + '%'
+                            width: recipient.health + '%'
                         })
                         gsap.to(recipient.position, {
                             x: recipient.position.x + 10,

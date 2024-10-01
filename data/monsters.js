@@ -1,21 +1,17 @@
-const playerImage = new Image()
-playerImage.src = './img/playerBattle.png'
-
-const enemyImage = new Image()
-enemyImage.src = './img/enemy.png'
-
 const monsters = {
     player: {
         position: {
             x: 240,
             y: 210
         }, //pozycja gracza w pixelach 
-        image: playerImage,
-        frames: {
-            max: 3,
-            hold: 50
+        image: {
+            src: './img/playerBattle.png'
         },
-        animate:true,
+        frames: {
+            max: 2,
+            hold: 100
+        },
+        animate: true,
         name: 'Knight',
         attacks: [attacks.Kick, attacks.Fireball]
     },
@@ -24,10 +20,12 @@ const monsters = {
             x: 800,
             y: 55
         }, //pozycja przeciwnika w pixelach
-        image: enemyImage,
+        image: {
+            src: './img/enemy.png'
+        },
         frames: {
-            max: 3,
-            hold: 50
+            max: 2,
+            hold: 100
         },
         animate: true,
         isEnemy: true,

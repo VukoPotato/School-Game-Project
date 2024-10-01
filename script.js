@@ -5,19 +5,19 @@ canvas.width = 1024
 canvas.height = 576
 
 const collisionsMap = []
-for (let i = 0; i < collisions.length; i += 32) {
-    collisionsMap.push(collisions.slice(i, 32 + i))
+for (let i = 0; i < collisions.length; i += 48) {
+    collisionsMap.push(collisions.slice(i, 48 + i))
 }
 
 const battleZonesMap = []
-for (let i = 0; i < battleZonesData.length; i += 32) {
-    battleZonesMap.push(battleZonesData.slice(i, 32 + i))
+for (let i = 0; i < battleZonesData.length; i += 48) {
+    battleZonesMap.push(battleZonesData.slice(i, 48 + i))
 }
 
 const boundaries = []
 const offset = {
-    x: 64,
-    y: -1304
+    x: -448,
+    y: -1815
 }
 
 collisionsMap.forEach((row, i) => {
@@ -143,7 +143,6 @@ function animate() {
     background.draw()
     boundaries.forEach(boundary => {
         boundary.draw()
-
     })
     battleZones.forEach(battleZone => {
         battleZone.draw()
@@ -170,7 +169,7 @@ function animate() {
                  rectangle2: battleZone
                 }) &&
                 overlappingArea > (player.width * player.height) / 2
-                && Math.random () < 0.1 // Szansa na bitke
+                && Math.random () < 0.01 // Szansa na bitke
             )   {
                 //dezaktywacja obecnej animacji
                 window.cancelAnimationFrame(animationId)
@@ -187,6 +186,7 @@ function animate() {
                         duration: 0.4,
                         onComplete() {
                             //aktywacja nowego petli animacji
+                            initBattle()
                             animateBattle()
                             gsap.to('#cutscene', {
                                 opacity: 0,
