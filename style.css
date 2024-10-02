@@ -6,6 +6,23 @@ body {
     background-color: black;
 }
 
+#gamestart {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 90vh;
+    text-align: center;
+    flex-direction: column;
+}
+
+#insertname {
+    color: white;
+}
+
+#startbutton {
+    font-size: 10vh;
+}
+
 #cutscene {
     background-color: black;
     position: absolute;
@@ -29,6 +46,7 @@ body {
     bottom: 0;
     left: 0;
     right: 0;
+    display: none;
 }
 
 #userInterface {

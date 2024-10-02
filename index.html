@@ -6,10 +6,15 @@
     <title>Skibidi game</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div id="gamestart">
+        <label for="playerName" id="insertname">Enter Your Knight's Name: (Optional)</label>
+        <input type="text" id="playerName" name="playerName" required><br>
+        <button onclick="gameStart()" id="startbutton">START GAME</button>
+    </div>
 
     <div id="game">
         <div id="cutscene"></div>
@@ -50,6 +55,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js" integrity=
     "sha512-H6cPm97FAsgIKmlBA4s774vqoN24V5gSQL4yBTDOY2su2DeXZVhQPxFK4P6GPdnZqM9fg1G3cMv5wD7e6cFLZQ==" crossorigin=
     "anonymous" referrerpolicy="no-referrer"></script>
+    <script src="gameStart.js"></script>
     <script src="data/audio.js"></script>
     <script src="data/battleZones.js"></script>
     <script src="data/collisions.js"></script>
