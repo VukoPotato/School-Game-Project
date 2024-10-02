@@ -59,6 +59,7 @@ function initBattle() {
                             })
 
                             battle.initiated = false
+                            audio.map.play()
                         }
                     })
                 })
@@ -91,6 +92,7 @@ function initBattle() {
                                 })
 
                                 battle.initiated = false
+                                audio.map.play()
                             }
                         })
                     })

@@ -174,6 +174,10 @@ function animate() {
                 //dezaktywacja obecnej animacji
                 window.cancelAnimationFrame(animationId)
 
+                audio.map.stop()
+                audio.initBattle.play()
+                audio.battle.play()
+                
                 battle.initiated = true
                 gsap.to('#cutscene', {
                     opacity: 1,
@@ -345,4 +349,12 @@ window.addEventListener('keyup', (e) => {
             break
     }
 
+})
+
+let clicked = false
+addEventListener('click', () => {
+    if (!clicked) {
+        audio.map.play()
+        clicked = true
+    }
 })
