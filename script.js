@@ -14,11 +14,34 @@ for (let i = 0; i < battleZonesData.length; i += 48) {
     battleZonesMap.push(battleZonesData.slice(i, 48 + i))
 }
 
-const boundaries = []
+const endingZoneMap = []
+for (let i = 0; i < endingZoneData.length; i += 48) {
+    endingZoneMap.push(endingZoneData.slice(i, 48 + i))
+}
+
 const offset = {
-    x: -448,
+    x: -1500, // -448 temporary
     y: -1815
 }
+
+const endingZone = []
+
+endingZoneMap.forEach((row, i) => {
+    row.forEach((symbol, j) => {
+        if (symbol === 66) { 
+            endingZone.push(
+                new Boundary({
+                    position: {
+                        x: j * Boundary.width + offset.x,
+                        y: i * Boundary.height + offset.y 
+                    }
+                })
+            )
+        }
+    })
+})
+
+const boundaries = []
 
 collisionsMap.forEach((row, i) => {
     row.forEach((symbol, j) => {
@@ -122,7 +145,7 @@ const keys = {
     }
 }
 
-const movables = [background, ...boundaries, foreground, ...battleZones]
+const movables = [background, ...boundaries, foreground, ...battleZones, ...endingZone]
 
 function rectangularCollision({rectangle1, rectangle2}) {
     return (
@@ -147,8 +170,13 @@ function animate() {
     battleZones.forEach(battleZone => {
         battleZone.draw()
     })
+    endingZone.forEach(endingZone => {
+        endingZone.draw()
+    })
     player.draw()
     foreground.draw()
+
+    var battleChance = 0
 
     let moving = true
     player.animate = false
@@ -169,9 +197,8 @@ function animate() {
                  rectangle2: battleZone
                 }) &&
                 overlappingArea > (player.width * player.height) / 2
-                && Math.random () < 0.01 // Szansa na bitke
+                && Math.random () < battleChance
             )   {
-                //dezaktywacja obecnej animacji
                 window.cancelAnimationFrame(animationId)
 
                 audio.map.stop()
@@ -189,7 +216,6 @@ function animate() {
                         opacity: 1,
                         duration: 0.4,
                         onComplete() {
-                            //aktywacja nowego petli animacji
                             initBattle()
                             animateBattle()
                             gsap.to('#cutscene', {
@@ -205,31 +231,61 @@ function animate() {
         }
     }
 
-    if (keys.w.pressed && lastKey == 'w') { 
-        player.animate = true
-        player.image = player.sprites.up
-
+    if (keys.w.pressed && lastKey === 'w') {
+        player.animate = true;
+        player.image = player.sprites.up;
+    
+        let moving = true;
+    
+        // Check for collisions with boundaries first
         for (let i = 0; i < boundaries.length; i++) {
-            const boundary = boundaries[i]
-            if(
+            const boundary = boundaries[i];
+            if (
                 rectangularCollision({
-                 rectangle1: player,
-                 rectangle2: {...boundary, position: {
-                    x: boundary.position.x,
-                    y: boundary.position.y + 3
-                 }}
+                    rectangle1: player,
+                    rectangle2: { ...boundary, position: {
+                        x: boundary.position.x,
+                        y: boundary.position.y + 3
+                    }}
                 })
-             ) {
-                moving = false
-                break
-             }
+            ) {
+                moving = false;  // Player can't move forward due to collision
+                break;
+            }
         }
-
-        if (moving)
-        movables.forEach(movable => {
-            movable.position.y += 2
-        })
-    } else if (keys.a.pressed && lastKey == 'a') { 
+    
+        // If no collisions with boundaries, move the player
+        if (moving) {
+            movables.forEach(movable => {
+                movable.position.y += 2;
+            });
+        }
+    
+        // After moving, check for collisions with the endingZone
+        for (let i = 0; i < endingZone.length; i++) {
+            const endingZoneBoundary = endingZone[i];
+            if (
+                rectangularCollision({
+                    rectangle1: player,
+                    rectangle2: { ...endingZoneBoundary, position: {
+                        x: endingZoneBoundary.position.x,
+                        y: endingZoneBoundary.position.y + 3
+                    }}
+                })
+            ) {
+                // Log to confirm collision detection
+                console.log("Player collided with the ending zone");
+    
+                // Player has collided with the endingZone
+                document.querySelector('#game').style.display = 'none';  // Hide game div
+                document.querySelector('#ending').style.display = 'block'; // Show ending div
+    
+                // Stop further checks
+                break;
+            }
+        }
+    }
+     else if (keys.a.pressed && lastKey == 'a') { 
         player.animate = true
         player.image = player.sprites.left
 
