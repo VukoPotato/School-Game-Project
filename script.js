@@ -237,7 +237,6 @@ function animate() {
     
         let moving = true;
     
-        // Check for collisions with boundaries first
         for (let i = 0; i < boundaries.length; i++) {
             const boundary = boundaries[i];
             if (
@@ -249,19 +248,17 @@ function animate() {
                     }}
                 })
             ) {
-                moving = false;  // Player can't move forward due to collision
+                moving = false;
                 break;
             }
         }
     
-        // If no collisions with boundaries, move the player
         if (moving) {
             movables.forEach(movable => {
                 movable.position.y += 2;
             });
         }
     
-        // After moving, check for collisions with the endingZone
         for (let i = 0; i < endingZone.length; i++) {
             const endingZoneBoundary = endingZone[i];
             if (
@@ -273,14 +270,11 @@ function animate() {
                     }}
                 })
             ) {
-                // Log to confirm collision detection
                 console.log("Player collided with the ending zone");
     
-                // Player has collided with the endingZone
-                document.querySelector('#game').style.display = 'none';  // Hide game div
-                document.querySelector('#ending').style.display = 'block'; // Show ending div
-    
-                // Stop further checks
+                document.querySelector('#game').style.display = 'none';
+                document.querySelector('#ending').style.display = 'block';
+                audio.map.stop()
                 break;
             }
         }
